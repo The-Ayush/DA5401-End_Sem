@@ -1,45 +1,42 @@
-# DA5401 Project: Metric Score Prediction
+# DA5401 Project: Metric Learning for Conversational AI Evaluation
 
 **Name:** Ayush Kumar  
-**Roll No:** DA24S019  
+**Roll No:** 23MCME13  
 
 ---
 
-## Project Summary
+## Overview
 
-This project focuses on predicting evaluation metric scores (1–10) using a **regression-based pipeline**.  
-Metric embeddings and conversation embeddings were combined to form numerical feature vectors, scaled, and reduced using PCA.  
-Class imbalance was handled through custom resampling, and **XGBoost Regression** (tuned via Optuna) was used as the final model.
+This project focuses on predicting the *fitness score* (1–10) between an **evaluation metric definition** and a **prompt–response conversation pair**.  
+The task is treated as a **regression problem** because the evaluation score is continuous and evaluated using RMSE.
 
----
+We implemented the following major steps:
 
-## Workflow Overview
+1. **Text Embedding using EmbeddingGemma** – Encoded conversation text into 768-dimensional vectors.  
+2. **Metric Embedding Fusion** – Combined metric embeddings with conversation embeddings (total 1536 features).  
+3. **Dimensionality Reduction (PCA)** – Reduced feature space while retaining 99% variance.  
+4. **Custom Sampling Strategy** – Balanced the highly imbalanced score distribution using controlled undersampling.  
+5. **XGBoost Regression (Optuna-Tuned)** – Final model selected using 5-fold CV to minimize RMSE.
 
-- Loaded metric names and 768-dim embeddings  
-- Generated conversation embeddings using EmbeddingGemma  
-- Combined text + metric embeddings → 1536-dim features  
-- Applied StandardScaler + PCA (retaining 99% variance)  
-- Performed undersampling/oversampling to handle imbalance  
-- Tuned and trained XGBoost using Optuna best parameters  
-- Generated raw and rounded/clipped submissions  
+This pipeline produced the best stability and predictive performance after experimenting with multiple sampling and modeling strategies.
 
 ---
 
-## Files Included
+## Files
 
-- Training & test JSON datasets  
-- Metric embeddings  
-- Final submissions (`submission_gemma.csv` and clipped version)  
-- Notebook / script with full pipeline  
-- README summarizing methodology  
-
----
-
-## Key Notes
-
-- RMSE metric → Regression was the correct modeling choice  
-- PCA significantly reduced dimensionality  
-- Resampling improved score distribution for training  
-- XGBoost performed best after tuning  
+- `train_data.json` – Training dataset containing prompts, responses, metric names, and scores.  
+- `test_data.json` – Test dataset without labels.  
+- `metric_names.json` – List of metric names.  
+- `metric_name_embeddings.npy` – 768-dimensional metric embeddings.  
+- `submission_gemma_6.csv` – Raw predicted scores.  
+- `submission_clipped_gemma_6.csv` – Rounded and clipped scores (0–10).  
+- `code.ipynb` – Notebook containing the full embedding, PCA, sampling, and XGBoost pipeline.  
+- `README.md` – This file.
 
 ---
+
+## Instructions
+
+1. Install dependencies:
+```bash
+pip install pandas numpy scikit-learn xgboost optuna sentence-transformers
