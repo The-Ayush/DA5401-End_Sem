@@ -1,42 +1,45 @@
-# DA5401 Project: Metric Score Prediction Using Regression
+# DA5401 Project: Metric Score Prediction
 
 **Name:** Ayush Kumar  
-**Roll No:** DA24S019
+**Roll No:** DA24S019  
 
 ---
 
-## Overview
+## Project Summary
 
-This project focuses on predicting evaluation metric scores using **regression models**, based on embeddings generated from metric names and text pairs.  
-The evaluation metric for this task is **RMSE**, which makes it a **regression problem** rather than classification.
-
-The pipeline includes:
-
-1. **Embedding Extraction** – 768-dim metric embeddings + 768-dim pair-text embeddings.  
-2. **Feature Construction** – Concatenation to form 1536-dimensional features.  
-3. **Scaling & PCA** – Standardization followed by PCA (99% variance retained).  
-4. **Resampling** – Handling imbalance in regression targets.  
-5. **Hyperparameter Tuning** – Optuna optimization for best XGBoost params.  
-6. **Final Training & Inference** – Training a full model and generating submissions.
+This project focuses on predicting evaluation metric scores (1–10) using a **regression-based pipeline**.  
+Metric embeddings and conversation embeddings were combined to form numerical feature vectors, scaled, and reduced using PCA.  
+Class imbalance was handled through custom resampling, and **XGBoost Regression** (tuned via Optuna) was used as the final model.
 
 ---
 
-## Files
+## Workflow Overview
 
-- `train.csv` – Training dataset containing metric names and pair texts.  
-- `test.csv` – Test dataset without target scores.  
-- `metric_embeddings.npy` – Precomputed 768-dimensional metric embeddings.  
-- `pair_embeddings.npy` – Precomputed 768-dimensional pair text embeddings.  
-- `submission_gemma_6.csv` – Raw continuous predictions.  
-- `submission_clipped_gemma_6.csv` – Rounded and clipped predictions (0–10).  
-- `code.ipynb` or `train_script.py` – Entire training pipeline.  
-- `README.md` – This file.
+- Loaded metric names and 768-dim embeddings  
+- Generated conversation embeddings using EmbeddingGemma  
+- Combined text + metric embeddings → 1536-dim features  
+- Applied StandardScaler + PCA (retaining 99% variance)  
+- Performed undersampling/oversampling to handle imbalance  
+- Tuned and trained XGBoost using Optuna best parameters  
+- Generated raw and rounded/clipped submissions  
 
 ---
 
-## Data Processing Steps
+## Files Included
 
-### **1. Loading Embeddings**
-- Loaded **145 metric names**
-- Loaded **768-dimensional embeddings**
-- Created combined features:  
+- Training & test JSON datasets  
+- Metric embeddings  
+- Final submissions (`submission_gemma.csv` and clipped version)  
+- Notebook / script with full pipeline  
+- README summarizing methodology  
+
+---
+
+## Key Notes
+
+- RMSE metric → Regression was the correct modeling choice  
+- PCA significantly reduced dimensionality  
+- Resampling improved score distribution for training  
+- XGBoost performed best after tuning  
+
+---
