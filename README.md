@@ -1,4 +1,4 @@
-# DA5401 Project: Metric Score Prediction Using Regression (XGBoost + PCA)
+# DA5401 Project: Metric Score Prediction Using Regression
 
 **Name:** Ayush Kumar  
 **Roll No:** DA24S019
